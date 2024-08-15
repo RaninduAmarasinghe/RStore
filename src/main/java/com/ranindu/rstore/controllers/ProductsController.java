@@ -1,6 +1,7 @@
 package com.ranindu.rstore.controllers;
 
 import com.ranindu.rstore.models.Product;
+import com.ranindu.rstore.models.ProductDto;
 import com.ranindu.rstore.services.ProductsRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Sort;
@@ -27,4 +28,14 @@ public class ProductsController {
 
         return "products/index";
     }
+
+
+    @GetMapping
+    public String showCreatePage(Model model) {
+        ProductDto productDto = new ProductDto();
+        model.addAttribute("productDto", productDto);
+        return "products/CreateProduct";
+    }
+
+
 }
