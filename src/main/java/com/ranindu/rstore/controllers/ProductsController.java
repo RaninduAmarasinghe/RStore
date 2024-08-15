@@ -30,7 +30,7 @@ public class ProductsController {
     }
 
 
-    @GetMapping
+    @GetMapping("/create")
     public String showCreatePage(Model model) {
         ProductDto productDto = new ProductDto();
         model.addAttribute("productDto", productDto);
