@@ -117,4 +117,9 @@ model.addAttribute("product", product);
         return "products/EditProduct";
 }
 
+@PostMapping("/edit")
+    public String updateProduct(Model model,@Valid @ModelAttribute ProductDto productDto, BindingResult result){
+        return "redirect:/products";
+}
+
 }
