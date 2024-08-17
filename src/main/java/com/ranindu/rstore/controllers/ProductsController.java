@@ -118,7 +118,49 @@ model.addAttribute("product", product);
 }
 
 @PostMapping("/edit")
-    public String updateProduct(Model model,@Valid @ModelAttribute ProductDto productDto, BindingResult result){
+    public String updateProduct(Model model,@RequestParam int id,@Valid @ModelAttribute ProductDto productDto, BindingResult result){
+
+try {
+Product product = repo.findById(id).get();
+model.addAttribute("product", product);
+
+if(result.hasErrors()){
+    return "products/EditProduct";
+}
+
+if (!productDto.getImageFile().isEmpty() ){
+    String uploadDir = "public/images/";
+    Path oldImagePath = Paths.get(uploadDir+ product.getImageFileName());
+    try {
+        Files.delete(oldImagePath);
+    }
+    catch (Exception ex){
+        System.out.println("Exception:" + ex.getMessage());
+    }
+
+    MultipartFile image = productDto.getImageFile();
+    Date createdAt = new Date();
+    String storageFileName = createdAt.getTime()+"_"+image.getOriginalFilename();
+
+    try (InputStream inputStream = image.getInputStream()) {
+        Files.copy(inputStream,Paths.get(uploadDir
+        +storageFileName),StandardCopyOption.REPLACE_EXISTING);
+    }
+    product.setImageFileName(storageFileName);
+}
+    product.setName(productDto.getName());
+    product.setBrand(productDto.getBrand());
+    product.setCategory(productDto.getCategory());
+    product.setPrice(productDto.getPrice());
+    product.setDescription(productDto.getDescription());
+
+    repo.save(product);
+
+}
+catch (Exception ex){
+    System.out.println("Exception:" + ex.getMessage());
+}
+
         return "redirect:/products";
 }
 
