@@ -164,4 +164,27 @@ catch (Exception ex){
         return "redirect:/products";
 }
 
+@GetMapping("/delete")
+    public String deleteProduct(Model model,@RequestParam int id) {
+
+        try {
+Product product = repo.findById(id).get();
+
+Path imagePath = Paths.get("public/images/"+product.getImageFileName());
+
+try{
+    Files.delete(imagePath);
+}
+catch (Exception ex){
+    System.out.println("Exception:" + ex.getMessage());
+}
+
+repo.delete(product);
+        }
+        catch (Exception ex){
+            System.out.println("Exception:" + ex.getMessage());
+        }
+        return "redirect:/products/" ;
+}
+
 }
